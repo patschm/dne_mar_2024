@@ -1,3 +1,5 @@
+using InfraStructure;
+
 namespace WebApplication1
 {
     public class Program
@@ -6,9 +8,13 @@ namespace WebApplication1
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            foreach (var item in builder.Services) {
+                Console.WriteLine(item?.ImplementationType?.Name);
+            }
             
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddTransient<ICounter, Counter>();
 
             var app = builder.Build();
 

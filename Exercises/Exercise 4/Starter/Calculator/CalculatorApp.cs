@@ -2,35 +2,36 @@ namespace Calculator;
 
 public partial class CalculatorApp : Form
 {
-    private SynchronizationContext? t0;
-
+    private SynchronizationContext? _main;
     public CalculatorApp()
     {
         InitializeComponent();
-        t0 = SynchronizationContext.Current;
+        _main = SynchronizationContext.Current;
     }
 
     private async void button1_Click(object sender, EventArgs e)
     {
         if (int.TryParse(txtA.Text, out int a) && int.TryParse(txtB.Text, out int b)) 
         {
-            //int result = LongAdd(a, b);
-            //UpdateAnswer(result);
+            //var t1 = new Task<int>(() =>LongAdd(a, b));
+            //t1.ContinueWith(t => UpdateAnswer(t.Result));
+            //t1.Start();
 
-            //Task.Run(() => LongAdd(a, b))
-            //    .ContinueWith(pTask => {
-            //        t0.Send(UpdateAnswer, pTask.Result);
-            //        //UpdateAnswer(pTask.Result);
-            //    });
-
-            DoJob(a,b).Wait();
+            // Of korter
+            //Task.Run(()=>LongAdd(a,b))
+            //    .ContinueWith(pt=> {
+            //        _main?.Post(UpdateAnswer, pt.Result);
+            //        //UpdateAnswer(pt.Result)
+            //        });
+            int result = DoeIets(a, b).Result; // Dead lock
+            UpdateAnswer(result);
         }      
     }
 
-    public async Task DoJob(int a, int b)
+    private async Task<int> DoeIets(int a, int b)
     {
-        var result = await LongAddAsync(a, b);//.ConfigureAwait(true);
-        UpdateAnswer(result);
+        int result = await LongAddAsync(a, b);//.ConfigureAwait(false);
+        return result;
     }
 
     private void UpdateAnswer(object? result)
@@ -45,6 +46,7 @@ public partial class CalculatorApp : Form
     }
     private Task<int> LongAddAsync(int a, int b)
     {
-        return Task.Run(() => LongAdd(a, b));
+        return Task.Run<int>(() => LongAdd(a, b));
     }
+
 }

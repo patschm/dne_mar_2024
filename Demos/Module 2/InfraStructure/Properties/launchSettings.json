@@ -3,7 +3,8 @@
     "EnvironmentSample": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Staging"
+        "DOTNET_ENVIRONMENT": "Staging",
+        "DOTNET_NAME": "Christien"
       }
     }
   }

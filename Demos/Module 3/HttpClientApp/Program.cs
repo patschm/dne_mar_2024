@@ -26,12 +26,15 @@ public class Program
     static HttpClient client = new HttpClient();
     private static void BasicClient()
     {
+        //HttpClient client = new HttpClient();
         client.BaseAddress = new Uri("https://localhost:8001/");
         for (int i = 0; i < 1000; i++)
         {
+            
             var response = client.GetAsync("WeatherForecast").Result;
             if (response.IsSuccessStatusCode)
             {
+                //Console.WriteLine(response.Content.Headers.ContentType);
                 var strData = response.Content.ReadAsStringAsync().Result;
                 Console.Write(i + ", ");
                 //Console.WriteLine(strData);

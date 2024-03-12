@@ -23,8 +23,8 @@ internal class Program
         //Configuration();
         //Secrets();
         //Logging();
-        DependencyInjection();
-        //AllInOne();
+        //DependencyInjection();
+        AllInOne();
     }
 
     private static void EnvironmentSettings()
@@ -56,6 +56,7 @@ internal class Program
         // AddJsonFile from package Microsoft.Extensions.Configuration.Json;
         bld.SetBasePath(Environment.CurrentDirectory);
         bld.AddJsonFile("appsettings.json", optional:true, reloadOnChange:false);
+        bld.AddJsonFile($"appsettings.Staging.json", optional: true, reloadOnChange: false);
         // bld.AddXmlFile("config.xml");
         // bld.AddIniFile("startup.ini");
         IConfiguration config = bld.Build();
@@ -103,20 +104,21 @@ internal class Program
         var builder = new ConfigurationBuilder();
         builder.SetBasePath(Environment.CurrentDirectory);
         builder.AddJsonFile("appsettings.json");
-        var config = builder.Build();
+        var config2 = builder.Build();
 
-        var factory = LoggerFactory.Create(bld => {
-            // In code:
-            // bld.AddFilter((cat, lvl) => {
-            //     return cat == typeof(LogVictim).FullName && lvl <= LogLevel.Information;
-            // });
+        var factory = LoggerFactory.Create(config => {
+        // In code:
+             //config.AddFilter((cat, lvl) =>
+             //{
+             //    return cat == typeof(LogVictim).FullName && lvl >= LogLevel.Trace;
+             //});
             // In config:
-            bld.AddConfiguration(config.GetSection("Logging"));
+            config.AddConfiguration(config2.GetSection("Logging"));
 
-            bld.ClearProviders();
+            config.ClearProviders();
             // From package: Microsoft.Extensions.Logging.Console
-            bld.AddConsole();
-            bld.AddEventLog();
+            config.AddConsole();
+            config.AddEventLog();
         });
 
         ILogger<LogVictim> logger = factory.CreateLogger<LogVictim>();
@@ -139,10 +141,10 @@ internal class Program
         //var ctr=provider.GetRequiredService<ICounter>();
         //ctr.Increment();
         //ctr.Show();
-        //ctr=provider.GetRequiredService<ICounter>();
+        //ctr = provider.GetRequiredService<ICounter>();
         //ctr.Increment();
         //ctr.Show();
-        //ctr=provider.GetRequiredService<ICounter>();
+        //ctr = provider.GetRequiredService<ICounter>();
         //ctr.Increment();
         //ctr.Show();
         //return;
